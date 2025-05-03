@@ -1,0 +1,2 @@
+# hi! that repository is about creating my first database # 
+## check my diagramms here vvv ##
