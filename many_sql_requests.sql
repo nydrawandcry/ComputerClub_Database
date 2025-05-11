@@ -290,7 +290,7 @@ WHERE payment >= 45000;
 
 -- -----------------------------------------
 
--- INNER JOIN (Клиенты и арендованные ими места)
+-- INNER JOIN (Клиенты и арендованные ими места) 
 SELECT c.name AS client_name, gp.type AS place_type
 FROM client c
 INNER JOIN client_rents_gaming_place crgp ON c.id = crgp.client_id
@@ -719,7 +719,7 @@ JOIN gaming_place gp ON gp.id = crgp.gaming_place_id
 ORDER BY crgp.session_end DESC
 LIMIT 3;
 
--- Клиенты с балансом выше среднего, которые арендовали игровые места
+-- Клиенты с балансом выше среднего, которые арендовали игровые места 
 WITH avg_balance_cte AS (
   SELECT AVG(balance) AS avg_balance FROM client
 )
