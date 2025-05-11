@@ -39,13 +39,13 @@ for _ in range(100):
     output.append(f"INSERT INTO employee (profession, name, payment) VALUES ('{profession}', '{name}', {payment});")
 
 # --- Мебель ---
-for _ in range(500):
+for _ in range(1000):
     type_ = random.choice(['chair', 'desk', 'shelf'])
     name = f"{type_}_{random_string(5)}"
     output.append(f"INSERT INTO furniture (type, name) VALUES ('{type_}', '{name}');")
 
 # --- Гаджеты ---
-for _ in range(500):
+for _ in range(1000):
     mouse = f"mouse_{random_string(5)}"
     carpet = f"carpet_{random_string(5)}"
     keyboard = f"keyboard_{random_string(5)}"
