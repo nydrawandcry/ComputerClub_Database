@@ -23,6 +23,13 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+private slots:
+    void on_ShowClients_clicked();
+
+    void on_ShowClientsPlaces_clicked();
+
+    void on_ShowPlaces_clicked();
+
 private:
     Ui::MainWindow *ui;
     QSqlQueryModel *model;//указатель на модель
