@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "addclient.h"
+#include "editclient.h"
 #include "ui_mainwindow.h"
 
 MainWindow::MainWindow(QWidget *parent)
@@ -83,11 +84,64 @@ void MainWindow::on_addClient_clicked()
         } else
         {
             QMessageBox::information(this, "Успех", "Клиент добавлен");
-            on_ShowClients_clicked(); // обновляем таблицу
+            on_ShowClients_clicked();
         }
     }
+}
 
+void MainWindow::on_EditClient_clicked()
+{
+    QModelIndex str_index = ui->Browser->currentIndex();
 
+    if(!str_index.isValid())
+    {
+        QMessageBox::warning(this, "Ошибка", "Сначала выберите клиента для редактирования");
+        return;
+    }
 
+    int row = str_index.row();
+    QAbstractItemModel *model = ui->Browser->model();
+
+    QString name = model->index(row, 1).data().toString();
+    int age = model->index(row, 2).data().toInt();
+    QString phone = model->index(row, 3).data().toString();
+    double balance = model->index(row, 4).data().toDouble();
+    QString status = model->index(row, 5).data().toString();
+
+    int client_id = model->index(row, 0).data().toInt();
+
+    editclient dialog(this);
+
+    dialog.setClientData(name, age, phone, balance, status);
+
+    if(dialog.exec()== QDialog::Accepted)
+    {
+        QString newName = dialog.getName();
+        int newAge = dialog.getAge();
+        QString newPhone = dialog.getPhone();
+        double newBalance = dialog.getBalance();
+        QString newStatus = dialog.getStatus();
+
+        QSqlQuery query;
+
+        query.prepare("UPDATE client SET name = ?, age = ?, phone = ?, balance = ?, status = ? WHERE id = ?");
+        query.addBindValue(newName);
+        query.addBindValue(newAge);
+        query.addBindValue(newPhone);
+        query.addBindValue(newBalance);
+        query.addBindValue(newStatus);
+        query.addBindValue(client_id);
+
+        if(!query.exec())
+        {
+            QMessageBox::critical(this, "Ошибка при редактировании клиента", query.lastError().text());
+        }
+        else
+        {
+            QMessageBox::information(this, "Успех", "Клиент успешно редактирован");
+            on_ShowClients_clicked();
+        }
+
+    }
 }
 

@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>addclient</class>
- <widget class="QDialog" name="addclient">
+ <class>editclient</class>
+ <widget class="QDialog" name="editclient">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>545</width>
-    <height>712</height>
+    <width>553</width>
+    <height>729</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -20,6 +20,13 @@
       <layout class="QHBoxLayout" name="horizontalLayout">
        <item>
         <spacer name="horizontalSpacer_2">
+         <property name="font">
+          <font>
+           <family>Century Gothic</family>
+           <pointsize>10</pointsize>
+           <bold>true</bold>
+          </font>
+         </property>
          <property name="orientation">
           <enum>Qt::Orientation::Horizontal</enum>
          </property>
@@ -41,12 +48,19 @@
           </font>
          </property>
          <property name="text">
-          <string>Добавить клиента компьютерного клуба</string>
+          <string>Редактирование клиента</string>
          </property>
         </widget>
        </item>
        <item>
         <spacer name="horizontalSpacer">
+         <property name="font">
+          <font>
+           <family>Century Gothic</family>
+           <pointsize>10</pointsize>
+           <bold>true</bold>
+          </font>
+         </property>
          <property name="orientation">
           <enum>Qt::Orientation::Horizontal</enum>
          </property>
@@ -61,7 +75,7 @@
       </layout>
      </item>
      <item>
-      <layout class="QHBoxLayout" name="horizontalLayout_2">
+      <layout class="QHBoxLayout" name="horizontalLayout_5">
        <item>
         <widget class="QLabel" name="label_2">
          <property name="font">
@@ -81,6 +95,8 @@
          <property name="font">
           <font>
            <family>Century Gothic</family>
+           <pointsize>10</pointsize>
+           <bold>true</bold>
           </font>
          </property>
         </widget>
@@ -88,7 +104,7 @@
       </layout>
      </item>
      <item>
-      <layout class="QHBoxLayout" name="horizontalLayout_3">
+      <layout class="QHBoxLayout" name="horizontalLayout_6">
        <item>
         <widget class="QLabel" name="label_3">
          <property name="font">
@@ -108,6 +124,8 @@
          <property name="font">
           <font>
            <family>Century Gothic</family>
+           <pointsize>9</pointsize>
+           <bold>false</bold>
           </font>
          </property>
         </widget>
@@ -135,6 +153,8 @@
          <property name="font">
           <font>
            <family>Century Gothic</family>
+           <pointsize>10</pointsize>
+           <bold>true</bold>
           </font>
          </property>
         </widget>
@@ -142,7 +162,7 @@
       </layout>
      </item>
      <item>
-      <layout class="QHBoxLayout" name="horizontalLayout_5">
+      <layout class="QHBoxLayout" name="horizontalLayout_3">
        <item>
         <widget class="QLabel" name="label_5">
          <property name="font">
@@ -162,6 +182,8 @@
          <property name="font">
           <font>
            <family>Century Gothic</family>
+           <pointsize>9</pointsize>
+           <bold>false</bold>
           </font>
          </property>
         </widget>
@@ -169,7 +191,7 @@
       </layout>
      </item>
      <item>
-      <layout class="QHBoxLayout" name="horizontalLayout_6">
+      <layout class="QHBoxLayout" name="horizontalLayout_2">
        <item>
         <widget class="QLabel" name="label_6">
          <property name="font">
@@ -189,6 +211,8 @@
          <property name="font">
           <font>
            <family>Century Gothic</family>
+           <pointsize>10</pointsize>
+           <bold>true</bold>
           </font>
          </property>
         </widget>
@@ -221,7 +245,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>accepted()</signal>
-   <receiver>addclient</receiver>
+   <receiver>editclient</receiver>
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -237,7 +261,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>rejected()</signal>
-   <receiver>addclient</receiver>
+   <receiver>editclient</receiver>
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">

@@ -32,6 +32,8 @@ private slots:
 
     void on_addClient_clicked();
 
+    void on_EditClient_clicked();
+
 private:
     Ui::MainWindow *ui;
     QSqlQueryModel *model;//указатель на модель

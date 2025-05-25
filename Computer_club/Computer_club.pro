@@ -11,15 +11,18 @@ CONFIG += c++17
 
 SOURCES += \
     addclient.cpp \
+    editclient.cpp \
     main.cpp \
     mainwindow.cpp
 
 HEADERS += \
     addclient.h \
+    editclient.h \
     mainwindow.h
 
 FORMS += \
     addclient.ui \
+    editclient.ui \
     mainwindow.ui
 
 # Default rules for deployment.
