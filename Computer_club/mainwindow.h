@@ -2,6 +2,12 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QSqlDatabase>
+#include <QMessageBox>
+#include <QSqlQuery>
+#include <QSqlQueryModel>
+#include <QSqlError>
+#include <QVariant>
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -19,5 +25,6 @@ public:
 
 private:
     Ui::MainWindow *ui;
+    QSqlQueryModel *model;//указатель на модель
 };
 #endif // MAINWINDOW_H
