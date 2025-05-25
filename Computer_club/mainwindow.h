@@ -36,6 +36,8 @@ private slots:
 
     void on_DeleteClient_clicked();
 
+    void on_AddPlace_clicked();
+
 private:
     Ui::MainWindow *ui;
     QSqlQueryModel *model;//указатель на модель

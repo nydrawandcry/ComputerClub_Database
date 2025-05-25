@@ -43,7 +43,7 @@
            </font>
           </property>
           <property name="text">
-           <string>Показать клиентов и их места</string>
+           <string>Показать игровые сессии</string>
           </property>
          </widget>
         </item>
@@ -178,6 +178,13 @@
         </property>
         <item>
          <widget class="QPushButton" name="addClient">
+          <property name="font">
+           <font>
+            <family>Century Gothic</family>
+            <pointsize>10</pointsize>
+            <bold>false</bold>
+           </font>
+          </property>
           <property name="text">
            <string>Добавить клиента</string>
           </property>
@@ -185,6 +192,13 @@
         </item>
         <item>
          <widget class="QPushButton" name="EditClient">
+          <property name="font">
+           <font>
+            <family>Century Gothic</family>
+            <pointsize>10</pointsize>
+            <bold>false</bold>
+           </font>
+          </property>
           <property name="text">
            <string>Редактировать клиента</string>
           </property>
@@ -192,6 +206,13 @@
         </item>
         <item>
          <widget class="QPushButton" name="DeleteClient">
+          <property name="font">
+           <font>
+            <family>Century Gothic</family>
+            <pointsize>10</pointsize>
+            <bold>false</bold>
+           </font>
+          </property>
           <property name="text">
            <string>Удалить клиента</string>
           </property>
@@ -227,7 +248,7 @@
            </font>
           </property>
           <property name="text">
-           <string>Клиенты и их места</string>
+           <string>Игровые сессии</string>
           </property>
          </widget>
         </item>
@@ -253,22 +274,43 @@
         </property>
         <item>
          <widget class="QPushButton" name="AddConnection">
+          <property name="font">
+           <font>
+            <family>Century Gothic</family>
+            <pointsize>10</pointsize>
+            <bold>false</bold>
+           </font>
+          </property>
           <property name="text">
-           <string>Добавить связь</string>
+           <string>Добавить игровую сессию</string>
           </property>
          </widget>
         </item>
         <item>
          <widget class="QPushButton" name="EditConnection">
+          <property name="font">
+           <font>
+            <family>Century Gothic</family>
+            <pointsize>10</pointsize>
+            <bold>false</bold>
+           </font>
+          </property>
           <property name="text">
-           <string>Редактировать связь</string>
+           <string>Редактировать игровую сессию</string>
           </property>
          </widget>
         </item>
         <item>
          <widget class="QPushButton" name="DeleteConnection">
+          <property name="font">
+           <font>
+            <family>Century Gothic</family>
+            <pointsize>10</pointsize>
+            <bold>false</bold>
+           </font>
+          </property>
           <property name="text">
-           <string>Удалить связь</string>
+           <string>Удалить сессию</string>
           </property>
          </widget>
         </item>
@@ -328,6 +370,13 @@
         </property>
         <item>
          <widget class="QPushButton" name="AddPlace">
+          <property name="font">
+           <font>
+            <family>Century Gothic</family>
+            <pointsize>10</pointsize>
+            <bold>false</bold>
+           </font>
+          </property>
           <property name="text">
            <string>Добавить игровое место</string>
           </property>
@@ -335,6 +384,13 @@
         </item>
         <item>
          <widget class="QPushButton" name="EditPlace">
+          <property name="font">
+           <font>
+            <family>Century Gothic</family>
+            <pointsize>10</pointsize>
+            <bold>false</bold>
+           </font>
+          </property>
           <property name="text">
            <string>Редактировать игровое место</string>
           </property>
@@ -342,6 +398,13 @@
         </item>
         <item>
          <widget class="QPushButton" name="DeletePlace">
+          <property name="font">
+           <font>
+            <family>Century Gothic</family>
+            <pointsize>10</pointsize>
+            <bold>false</bold>
+           </font>
+          </property>
           <property name="text">
            <string>Удалить игровое место</string>
           </property>

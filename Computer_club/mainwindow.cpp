@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "addclient.h"
+#include "addplace.h"
 #include "editclient.h"
 #include "ui_mainwindow.h"
 
@@ -72,7 +73,7 @@ void MainWindow::on_addClient_clicked()
         QSqlQuery query;
 
         query.prepare("INSERT INTO client (name, age, phone, balance, status) VALUES (?, ?, ?, ?, ?)");
-        query.addBindValue(dialog.getName());
+        query.addBindValue(name);
         query.addBindValue(age);
         query.addBindValue(phone);
         query.addBindValue(balance);
@@ -144,7 +145,6 @@ void MainWindow::on_EditClient_clicked()
     }
 }
 
-
 void MainWindow::on_DeleteClient_clicked()
 {
     QModelIndex str_index = ui->Browser->currentIndex();
@@ -180,6 +180,33 @@ void MainWindow::on_DeleteClient_clicked()
     {
         QMessageBox::information(this, "Успех", "Клиент успешно удален из базы данных");
         on_ShowClients_clicked();
+    }
+}
+
+
+void MainWindow::on_AddPlace_clicked()
+{
+    addplace dialog(this);
+
+    if(dialog.exec() == QDialog::Accepted)
+    {
+        QString type = dialog.getType();
+
+        QSqlQuery query;
+
+        query.prepare("INSERT INTO gaming_place(type) VALUES(?)");
+
+        query.addBindValue(type);
+
+        if(!query.exec())
+        {
+            QMessageBox::critical(this, "Ошибка при добавлении игрового места", query.lastError().text());
+        }
+        else
+        {
+            QMessageBox::information(this, "Успех", "Игровое место добавлено");
+            on_ShowPlaces_clicked();
+        }
     }
 }
 

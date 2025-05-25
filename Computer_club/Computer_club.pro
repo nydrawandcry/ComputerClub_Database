@@ -11,18 +11,30 @@ CONFIG += c++17
 
 SOURCES += \
     addclient.cpp \
+    addplace.cpp \
+    addsession.cpp \
     editclient.cpp \
+    editplace.cpp \
+    editsession.cpp \
     main.cpp \
     mainwindow.cpp
 
 HEADERS += \
     addclient.h \
+    addplace.h \
+    addsession.h \
     editclient.h \
+    editplace.h \
+    editsession.h \
     mainwindow.h
 
 FORMS += \
     addclient.ui \
+    addplace.ui \
+    addsession.ui \
     editclient.ui \
+    editplace.ui \
+    editsession.ui \
     mainwindow.ui
 
 # Default rules for deployment.
