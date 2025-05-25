@@ -177,21 +177,21 @@
          <number>0</number>
         </property>
         <item>
-         <widget class="QPushButton" name="pushButton_3">
+         <widget class="QPushButton" name="addClient">
           <property name="text">
            <string>Добавить клиента</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="pushButton_2">
+         <widget class="QPushButton" name="EditClient">
           <property name="text">
            <string>Редактировать клиента</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="pushButton">
+         <widget class="QPushButton" name="DeleteClient">
           <property name="text">
            <string>Удалить клиента</string>
           </property>
@@ -252,21 +252,21 @@
          <number>0</number>
         </property>
         <item>
-         <widget class="QPushButton" name="pushButton_6">
+         <widget class="QPushButton" name="AddConnection">
           <property name="text">
            <string>Добавить связь</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="pushButton_5">
+         <widget class="QPushButton" name="EditConnection">
           <property name="text">
            <string>Редактировать связь</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="pushButton_4">
+         <widget class="QPushButton" name="DeleteConnection">
           <property name="text">
            <string>Удалить связь</string>
           </property>
@@ -327,21 +327,21 @@
          <number>0</number>
         </property>
         <item>
-         <widget class="QPushButton" name="pushButton_9">
+         <widget class="QPushButton" name="AddPlace">
           <property name="text">
            <string>Добавить игровое место</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="pushButton_8">
+         <widget class="QPushButton" name="EditPlace">
           <property name="text">
            <string>Редактировать игровое место</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="pushButton_7">
+         <widget class="QPushButton" name="DeletePlace">
           <property name="text">
            <string>Удалить игровое место</string>
           </property>

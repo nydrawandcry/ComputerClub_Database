@@ -30,6 +30,8 @@ private slots:
 
     void on_ShowPlaces_clicked();
 
+    void on_pushButton_3_clicked();
+
 private:
     Ui::MainWindow *ui;
     QSqlQueryModel *model;//указатель на модель
