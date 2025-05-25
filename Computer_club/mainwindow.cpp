@@ -141,7 +141,45 @@ void MainWindow::on_EditClient_clicked()
             QMessageBox::information(this, "Успех", "Клиент успешно редактирован");
             on_ShowClients_clicked();
         }
+    }
+}
 
+
+void MainWindow::on_DeleteClient_clicked()
+{
+    QModelIndex str_index = ui->Browser->currentIndex();
+
+    if(!str_index.isValid())
+    {
+        QMessageBox::warning(this, "Ошибка", "Сначала выберите клиента для удаления");
+    }
+
+    int row = str_index.row();
+    QAbstractItemModel *model = ui->Browser->model();
+
+    int client_id = model->index(row, 0).data().toInt();
+
+    auto reply = QMessageBox::question(this, "Подтверждение удаления", "Вы действительно хотите удалить этого пользователя?", QMessageBox::No | QMessageBox::Yes);
+
+    if(reply == QMessageBox::No)
+    {
+        return;
+    }
+
+    QSqlQuery query;
+
+    query.prepare("DELETE FROM client WHERE id = ?");
+
+    query.addBindValue(client_id);
+
+    if(!query.exec())
+    {
+        QMessageBox::critical(this, "Ошибка удаления", query.lastError().text());
+    }
+    else
+    {
+        QMessageBox::information(this, "Успех", "Клиент успешно удален из базы данных");
+        on_ShowClients_clicked();
     }
 }
 
