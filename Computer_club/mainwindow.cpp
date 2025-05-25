@@ -1,4 +1,5 @@
 #include "mainwindow.h"
+#include "addclient.h"
 #include "ui_mainwindow.h"
 
 MainWindow::MainWindow(QWidget *parent)
@@ -55,5 +56,38 @@ void MainWindow::on_ShowPlaces_clicked()
     }
 }
 
+void MainWindow::on_addClient_clicked()
+{
+    addclient dialog(this);
 
+    if(dialog.exec() == QDialog::Accepted)
+    {
+        QString name = dialog.getName();
+        int age = dialog.getAge();
+        QString phone = dialog.getPhone();
+        double balance = dialog.getBalance();
+        QString status = dialog.getStatus();
+
+        QSqlQuery query;
+
+        query.prepare("INSERT INTO client (name, age, phone, balance, status) VALUES (?, ?, ?, ?, ?)");
+        query.addBindValue(dialog.getName());
+        query.addBindValue(age);
+        query.addBindValue(phone);
+        query.addBindValue(balance);
+        query.addBindValue(status);
+
+        if (!query.exec())
+        {
+            QMessageBox::critical(this, "Ошибка при добавлении клиента", query.lastError().text());
+        } else
+        {
+            QMessageBox::information(this, "Успех", "Клиент добавлен");
+            on_ShowClients_clicked(); // обновляем таблицу
+        }
+    }
+
+
+
+}
 

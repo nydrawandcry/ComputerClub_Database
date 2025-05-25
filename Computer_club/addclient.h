@@ -3,9 +3,8 @@
 
 #include <QDialog>
 
-namespace Ui
-{
-    class addclient;
+namespace Ui {
+class addclient;
 }
 
 class addclient : public QDialog

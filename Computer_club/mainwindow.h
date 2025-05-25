@@ -30,7 +30,7 @@ private slots:
 
     void on_ShowPlaces_clicked();
 
-    void on_pushButton_3_clicked();
+    void on_addClient_clicked();
 
 private:
     Ui::MainWindow *ui;
