@@ -475,6 +475,8 @@ void MainWindow::loadClientsBalance()
         QString name = query.value(1).toString();
 
         ui->BalanceClient->addItem(name, id);
+        ui->ClientBalanceMinus->addItem(name,id);
+        ui->ClientAuto->addItem(name,id);
     }
 }
 
@@ -514,6 +516,94 @@ void MainWindow::on_AddBalance_clicked()
     {
         QMessageBox::information(this, "Успех", "Баланс обновлен");
         on_ShowClients_clicked();
+    }
+}
+
+
+void MainWindow::on_MinusBalance_clicked()
+{
+    int clientId = ui->ClientBalanceMinus->currentData().toInt();
+    QString clientName = ui->ClientBalanceMinus->currentText();
+    double amount = ui->MinusBalanceAmount->value();
+
+    if (amount <= 0)
+    {
+        QMessageBox::warning(this, "Ошибка", "Введите сумму пополнения");
+        return;
+    }
+
+    QSqlQuery query;
+    query.prepare("SELECT balance FROM client WHERE id = ?");
+    query.addBindValue(clientId);
+
+    if (!query.exec() || !query.next())
+    {
+        QMessageBox::critical(this, "Ошибка", "Клиент не найден");
+        return;
+    }
+
+    QSqlQuery updateQuery;
+    updateQuery.prepare("UPDATE client SET balance = balance - ? WHERE id = ?");
+    updateQuery.addBindValue(amount);
+    updateQuery.addBindValue(clientId);
+
+    if (!updateQuery.exec())
+    {
+        QMessageBox::critical(this, "Ошибка", "Ошибка при обновлении баланса");
+        return;
+    }
+    else
+    {
+        QMessageBox::information(this, "Успех", "Баланс обновлен");
+        on_ShowClients_clicked();
+    }
+}
+
+void MainWindow::on_AutoCount_clicked()
+{
+    int clientId = ui->ClientAuto->currentData().toInt();
+    QTime startTime = ui->startAuto->time();
+    QTime endTime = ui->EndAuto->time();
+
+    if (startTime >= endTime)
+    {
+        QMessageBox::warning(this, "Ошибка", "Время окончания должно быть позже начала.");
+        return;
+    }
+
+    //временное добавление в базу для тестирования(думаю убирать или нет)
+    // QSqlQuery insert;
+    // insert.prepare("INSERT INTO client_rents_gaming_place (client_id, gaming_place_id, session_start, session_end) "
+    //                "VALUES (?, ?, ?, ?)");
+    // insert.addBindValue(clientId);
+    // insert.addBindValue(1);
+    // insert.addBindValue(startTime.toString("HH:mm:ss"));
+    // insert.addBindValue(endTime.toString("HH:mm:ss"));
+    // insert.exec(); //
+
+    // Запрос аналитики
+    QSqlQuery costQuery;
+    costQuery.prepare(R"(
+        SELECT
+          TIMESTAMPDIFF(MINUTE, session_start, session_end) AS duration_minutes,
+          ROUND(TIMESTAMPDIFF(MINUTE, session_start, session_end) / 60 * 100, 2) AS total_cost
+        FROM client_rents_gaming_place
+        WHERE client_id = ?
+        ORDER BY session_start DESC
+        LIMIT 1
+    )");
+
+    costQuery.addBindValue(clientId);
+
+    if (costQuery.exec() && costQuery.next()) {
+        int duration = costQuery.value(0).toInt();
+        double cost = costQuery.value(1).toDouble();
+
+        ui->Results->setText(QString("Длительность: %1 мин\nСтоимость: %2 руб.")
+                                     .arg(duration)
+                                     .arg(cost));
+    } else {
+        QMessageBox::critical(this, "Ошибка", "Не удалось получить данные о стоимости сеанса.");
     }
 }
 
