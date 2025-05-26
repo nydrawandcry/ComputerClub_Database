@@ -2,6 +2,7 @@
 #include "addclient.h"
 #include "addplace.h"
 #include "editclient.h"
+#include "editplace.h"
 #include "ui_mainwindow.h"
 
 MainWindow::MainWindow(QWidget *parent)
@@ -96,7 +97,7 @@ void MainWindow::on_EditClient_clicked()
 
     if(!str_index.isValid())
     {
-        QMessageBox::warning(this, "Ошибка", "Сначала выберите клиента для редактирования");
+        QMessageBox::warning(this, "Предупреждение", "Сначала выберите клиента для редактирования");
         return;
     }
 
@@ -183,7 +184,6 @@ void MainWindow::on_DeleteClient_clicked()
     }
 }
 
-
 void MainWindow::on_AddPlace_clicked()
 {
     addplace dialog(this);
@@ -207,6 +207,89 @@ void MainWindow::on_AddPlace_clicked()
             QMessageBox::information(this, "Успех", "Игровое место добавлено");
             on_ShowPlaces_clicked();
         }
+    }
+}
+
+void MainWindow::on_EditPlace_clicked()
+{
+    QModelIndex str_index = ui->Browser->currentIndex();
+
+    if(!str_index.isValid())
+    {
+        QMessageBox::warning(this, "Предупреждение", "Сначала выберите игровое место для редактирования");
+        return;
+    }
+
+    int row = str_index.row();
+    QAbstractItemModel *model = ui->Browser->model();
+
+    QString type = model->index(row, 1).data().toString();
+
+    int place_id = model->index(row, 0).data().toInt();
+
+    editplace dialog(this);
+
+    dialog.setPlaceData(type);
+
+    if(dialog.exec() == QDialog::Accepted)
+    {
+        QSqlQuery query;
+
+        QString newType = dialog.getType();
+
+        query.prepare("UPDATE gaming_place SET type = ? WHERE id = ?");
+
+        query.addBindValue(newType);
+
+        query.addBindValue(place_id);
+
+        if(!query.exec())
+        {
+            QMessageBox::critical(this, "Ошибка при редактировании игрового места", query.lastError().text());
+        }
+        else
+        {
+            QMessageBox::information(this, "Успех", "Игровое место обновлено");
+            on_ShowPlaces_clicked();
+        }
+    }
+}
+
+void MainWindow::on_DeletePlace_clicked()
+{
+    QModelIndex str_index = ui->Browser->currentIndex();
+
+    if(!str_index.isValid())
+    {
+        QMessageBox::warning(this, "Предупреждение", "Сначала выберите игровое место для удаления");
+    }
+
+    int row = str_index.row();
+    QAbstractItemModel *model = ui->Browser->model();
+
+    int place_id = model->index(row, 0).data().toInt();
+
+    auto reply = QMessageBox::question(this, "Подтверждение удаления", "Вы точно хотите удалить это игровое место?", QMessageBox::No | QMessageBox::Yes);
+
+    if(reply == QMessageBox::No)
+    {
+        return;
+    }
+
+    QSqlQuery query;
+
+    query.prepare("DELETE FROM gaming_place WHERE id = ?");
+
+    query.addBindValue(place_id);
+
+    if(!query.exec())
+    {
+        QMessageBox::critical(this, "Ошибка при удалении игрового места", query.lastError().text());
+    }
+    else
+    {
+        QMessageBox::information(this, "Успех", "Игровое место удалено");
+        on_ShowPlaces_clicked();
     }
 }
 

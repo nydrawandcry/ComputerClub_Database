@@ -13,6 +13,11 @@ editplace::~editplace()
     delete ui;
 }
 
+void editplace::setPlaceData(QString &type)
+{
+    ui->PlaceType->setText(type);
+}
+
 QString editplace::getType() const
 {
     return ui->PlaceType->text();

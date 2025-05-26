@@ -15,6 +15,8 @@ public:
     explicit editplace(QWidget *parent = nullptr);
     ~editplace();
 
+    void setPlaceData(QString& type);
+
     QString getType() const;
 
 private:
