@@ -25,6 +25,8 @@ MainWindow::MainWindow(QWidget *parent)
         QMessageBox::critical(this, "Ошибка", "Не удалось подключиться к базе данных");
         return;
     }
+
+    loadClientsBalance();
 }
 
 MainWindow::~MainWindow()
@@ -460,6 +462,58 @@ void MainWindow::on_DeleteSession_clicked()
     {
         QMessageBox::information(this, "Успех", "Сессия удалена");
         on_ShowClientsPlaces_clicked();
+    }
+}
+
+void MainWindow::loadClientsBalance()
+{
+    QSqlQuery query("SELECT id, name FROM client");
+
+    while (query.next())
+    {
+        int id = query.value(0).toInt();
+        QString name = query.value(1).toString();
+
+        ui->BalanceClient->addItem(name, id);
+    }
+}
+
+void MainWindow::on_AddBalance_clicked()
+{
+    int clientId = ui->BalanceClient->currentData().toInt();
+    QString clientName = ui->BalanceClient->currentText();
+    double amount = ui->AddBalanceSum->value();
+
+    if (amount <= 0)
+    {
+        QMessageBox::warning(this, "Ошибка", "Введите сумму пополнения");
+        return;
+    }
+
+    QSqlQuery query;
+    query.prepare("SELECT balance FROM client WHERE id = ?");
+    query.addBindValue(clientId);
+
+    if (!query.exec() || !query.next())
+    {
+        QMessageBox::critical(this, "Ошибка", "Клиент не найден");
+        return;
+    }
+
+    QSqlQuery updateQuery;
+    updateQuery.prepare("UPDATE client SET balance = balance + ? WHERE id = ?");
+    updateQuery.addBindValue(amount);
+    updateQuery.addBindValue(clientId);
+
+    if (!updateQuery.exec())
+    {
+        QMessageBox::critical(this, "Ошибка", "Ошибка при обновлении баланса");
+        return;
+    }
+    else
+    {
+        QMessageBox::information(this, "Успех", "Баланс обновлен");
+        on_ShowClients_clicked();
     }
 }
 

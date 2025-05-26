@@ -48,6 +48,10 @@ private slots:
 
     void on_DeleteSession_clicked();
 
+    void loadClientsBalance();
+
+    void on_AddBalance_clicked();
+
 private:
     Ui::MainWindow *ui;
     QSqlQueryModel *model; //указатель на модель
