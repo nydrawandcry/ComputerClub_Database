@@ -42,8 +42,14 @@ private slots:
 
     void on_DeletePlace_clicked();
 
+    void on_AddSession_clicked();
+
+    void on_EditSession_clicked();
+
+    void on_DeleteSession_clicked();
+
 private:
     Ui::MainWindow *ui;
-    QSqlQueryModel *model;//указатель на модель
+    QSqlQueryModel *model; //указатель на модель
 };
 #endif // MAINWINDOW_H

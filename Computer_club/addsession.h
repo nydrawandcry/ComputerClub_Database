@@ -2,21 +2,30 @@
 #define ADDSESSION_H
 
 #include <QDialog>
+#include <QSqlQuery>
 
 namespace Ui {
-class addconnection;
+class addsession;
 }
 
-class addconnection : public QDialog
+class addsession : public QDialog
 {
     Q_OBJECT
 
 public:
-    explicit addconnection(QWidget *parent = nullptr);
-    ~addconnection();
+    explicit addsession(QWidget *parent = nullptr);
+    ~addsession();
+
+    void load_data();
+
+    int getClientId()const;
+    int getPlaceId()const;
+
+    QTime getSessionStart()const;
+    QTime getSessionEnd()const;
 
 private:
-    Ui::addconnection *ui;
+    Ui::addsession *ui;
 };
 
 #endif // ADDSESSION_H

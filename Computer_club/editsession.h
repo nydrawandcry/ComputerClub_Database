@@ -4,19 +4,27 @@
 #include <QDialog>
 
 namespace Ui {
-class editconnection;
+class editsession;
 }
 
-class editconnection : public QDialog
+class editsession : public QDialog
 {
     Q_OBJECT
 
 public:
-    explicit editconnection(QWidget *parent = nullptr);
-    ~editconnection();
+    explicit editsession(QWidget *parent = nullptr);
+    ~editsession();
+
+    void setClientPLaceData(int clientId, int placeId, QTime sessionStart, QTime sessionEnd);
+
+    int getClientId()const;
+    int getPlaceId()const;
+
+    QTime getSessionStart()const;
+    QTime getSessionEnd()const;
 
 private:
-    Ui::editconnection *ui;
+    Ui::editsession *ui;
 };
 
 #endif // EDITSESSION_H

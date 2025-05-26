@@ -1,8 +1,11 @@
 #include "mainwindow.h"
 #include "addclient.h"
 #include "addplace.h"
+#include "addsession.h"
 #include "editclient.h"
 #include "editplace.h"
+#include "editsession.h"
+#include "qdatetime.h"
 #include "ui_mainwindow.h"
 
 MainWindow::MainWindow(QWidget *parent)
@@ -83,7 +86,8 @@ void MainWindow::on_addClient_clicked()
         if (!query.exec())
         {
             QMessageBox::critical(this, "Ошибка при добавлении клиента", query.lastError().text());
-        } else
+        }
+        else
         {
             QMessageBox::information(this, "Успех", "Клиент добавлен");
             on_ShowClients_clicked();
@@ -290,6 +294,172 @@ void MainWindow::on_DeletePlace_clicked()
     {
         QMessageBox::information(this, "Успех", "Игровое место удалено");
         on_ShowPlaces_clicked();
+    }
+}
+
+void MainWindow::on_AddSession_clicked()
+{
+    addsession dialog(this);
+
+    if(dialog.exec() == QDialog::Accepted)
+    {
+        int clientId = dialog.getClientId();
+        int placeId = dialog.getPlaceId();
+        QTime sessionStart = dialog.getSessionStart();
+        QTime sessionEnd = dialog.getSessionEnd();
+
+        //сначала проверка, уникально ли игровое место
+        QSqlQuery check("SELECT COUNT(*) FROM client_rents_gaming_place WHERE gaming_place_id = ?");
+        check.addBindValue(placeId);
+
+        if(!check.exec())
+        {
+            QMessageBox::warning(this, "Ошибка", "Не удалось проверить доступность игрового места");
+            return;
+        }
+
+        check.next();
+
+        int count = check.value(0).toInt();
+
+        if(count>0)
+        {
+            QMessageBox::warning(this, "Место занято", "Игровое место уже занято другим пользователем. Пожалуйста, выберите другое.");
+            return;
+        }
+
+        QSqlQuery insert("INSERT INTO client_rents_gaming_place(client_id, gaming_place_id, session_start, session_end) VALUES (?, ?, ?, ?)");
+
+        insert.addBindValue(clientId);
+        insert.addBindValue(placeId);
+        insert.addBindValue(sessionStart);
+        insert.addBindValue(sessionEnd);
+
+        if(!insert.exec())
+        {
+            QMessageBox::critical(this, "Ошибка при добавлении сессии", insert.lastError().text());
+        }
+        else
+        {
+            QMessageBox::information(this, "Успех", "Сессия добавлена");
+            on_ShowClientsPlaces_clicked();
+        }
+    }
+}
+
+void MainWindow::on_EditSession_clicked()
+{
+    QModelIndex str_index = ui->Browser->currentIndex();
+
+    if(!str_index.isValid())
+    {
+        QMessageBox::warning(this, "Ошибка", "Выберите сессию для редактирования");
+        return;
+    }
+
+    int row = str_index.row();
+    QAbstractItemModel *model = ui->Browser->model();
+
+    editsession dialog(this);
+
+    int clientId = model->index(row, 0).data().toInt();
+    int placeId = model->index(row, 1).data().toInt();
+    QTime sessionStart = QTime::fromString(model->index(row, 2).data().toString(), "hh:mm:ss");
+    QTime sessionEnd = QTime::fromString(model->index(row,3).data().toString(), "hh:mm:ss");
+
+    dialog.setClientPLaceData(clientId, placeId, sessionStart, sessionEnd);
+
+    if(dialog.exec()== QDialog::Accepted)
+    {
+        int newClient = dialog.getClientId();
+        int newPlace = dialog.getPlaceId();
+        QTime newSessionStart = dialog.getSessionStart();
+        QTime newSessionEnd = dialog.getSessionEnd();
+        //=====================CHECK=====================
+
+        QSqlQuery check;
+        check.prepare("SELECT COUNT(*) FROM client_rents_gaming_place WHERE gaming_place_id = ? AND client_id != ?");
+        check.addBindValue(newClient);
+        check.addBindValue(newPlace);
+
+        if(!check.exec())
+        {
+            QMessageBox::critical(this, "Ошибка с проверкой на занятость игрового места", check.lastError().text());
+            return;
+        }
+        if(check.next())
+        {
+            int count = check.value(0).toInt();
+            if(count>0)
+            {
+                QMessageBox::warning(this, "Занято", "Данное игровое место уже занято другим пользователем. Выберете другое");
+                return;
+            }
+        }
+
+        //=====================CHECK=====================
+        QSqlQuery update;
+        update.prepare(R"(
+            UPDATE client_rents_gaming_place
+            SET client_id = ?, gaming_place_id = ?, session_start = ?, session_end = ?
+            WHERE client_id = ? AND gaming_place_id = ?
+        )");
+
+        update.addBindValue(newClient);
+        update.addBindValue(newPlace);
+        update.addBindValue(newSessionStart);
+        update.addBindValue(newSessionEnd);
+
+        if(!update.exec())
+        {
+            QMessageBox::critical(this, "Ошибка с редактированием сессии", update.lastError().text());
+        }
+        else
+        {
+            QMessageBox::information(this, "Успех", "Сессия обновлена");
+            on_ShowClientsPlaces_clicked();
+        }
+    }
+}
+
+void MainWindow::on_DeleteSession_clicked()
+{
+    QModelIndex str_index = ui->Browser->currentIndex();
+
+    if(!str_index.isValid())
+    {
+        QMessageBox::warning(this, "Ошибка", "Сначала выберите сессию для удаления");
+        return;
+    }
+
+    int row = str_index.row();
+    QAbstractItemModel *model = ui->Browser->model();
+
+    int client = model->index(row, 0).data().toInt();
+    int place = model->index(row, 1).data().toInt();
+
+    auto reply = QMessageBox::question(this, "Подтверждение", "Вы действительно хотите удалить сессию?", QMessageBox::No | QMessageBox::Yes);
+
+    if(reply == QMessageBox::No)
+    {
+        return;
+    }
+
+    QSqlQuery query;
+
+    query.prepare("DELETE FROM client_rents_gaming_place WHERE client_id = ? AND gaming_place_id = ?");
+
+    query.addBindValue(client);
+    query.addBindValue(place);
+
+    if(!query.exec())
+    {
+        QMessageBox::critical(this, "Ошибка при удалении сессии", query.lastError().text());
+    }
+    else
+    {
+        QMessageBox::information(this, "Успех", "Сессия удалена");
+        on_ShowClientsPlaces_clicked();
     }
 }
 

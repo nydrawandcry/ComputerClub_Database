@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>editconnection</class>
- <widget class="QDialog" name="editconnection">
+ <class>editsession</class>
+ <widget class="QDialog" name="editsession">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -91,15 +91,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QSpinBox" name="ClientId">
-         <property name="font">
-          <font>
-           <family>Century Gothic</family>
-           <pointsize>9</pointsize>
-           <bold>false</bold>
-          </font>
-         </property>
-        </widget>
+        <widget class="QComboBox" name="Client"/>
        </item>
       </layout>
      </item>
@@ -120,15 +112,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QSpinBox" name="PlaceId">
-         <property name="font">
-          <font>
-           <family>Century Gothic</family>
-           <pointsize>9</pointsize>
-           <bold>false</bold>
-          </font>
-         </property>
-        </widget>
+        <widget class="QComboBox" name="Place"/>
        </item>
       </layout>
      </item>
@@ -216,7 +200,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>accepted()</signal>
-   <receiver>editconnection</receiver>
+   <receiver>editsession</receiver>
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -232,7 +216,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>rejected()</signal>
-   <receiver>editconnection</receiver>
+   <receiver>editsession</receiver>
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">
