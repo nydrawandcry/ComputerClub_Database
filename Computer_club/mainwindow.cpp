@@ -323,8 +323,8 @@ void MainWindow::on_AddSession_clicked()
         )");
 
         check.addBindValue(placeId);
-        check.addBindValue(sessionStart);  // session_end <= start
-        check.addBindValue(sessionEnd);    // session_start >= end
+        check.addBindValue(sessionStart.toString("HH:mm:ss"));  // session_end <= start
+        check.addBindValue(sessionEnd.toString("HH:mm:ss"));    // session_start >= end
 
         if (!check.exec())
         {
@@ -350,8 +350,8 @@ void MainWindow::on_AddSession_clicked()
 
         insert.addBindValue(clientId);
         insert.addBindValue(placeId);
-        insert.addBindValue(sessionStart);
-        insert.addBindValue(sessionEnd);
+        insert.addBindValue(sessionStart.toString("HH:mm:ss"));
+        insert.addBindValue(sessionEnd.toString("HH:mm:ss"));
 
         if (!insert.exec())
         {
@@ -611,5 +611,3 @@ void MainWindow::on_ClientBalanceMinus_currentIndexChanged(int index)
         ui->CurrentBalance->setText("Ошибка при отображении текущего баланса клиента");
     }
 }
-
-

@@ -33,7 +33,7 @@ void addsession::load_data()
     {
         int id = placeQuery.value(0).toInt();
         QString type = placeQuery.value(1).toString();
-        ui->Place->addItem(QString("№%1 (%2)").arg(id).arg(type));
+        ui->Place->addItem(QString("№%1 (%2)").arg(id).arg(type), id);
     }
 }
 
