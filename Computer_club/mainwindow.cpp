@@ -492,16 +492,6 @@ void MainWindow::on_AddBalance_clicked()
         return;
     }
 
-    QSqlQuery query;
-    query.prepare("SELECT balance FROM client WHERE id = ?");
-    query.addBindValue(clientId);
-
-    if (!query.exec() || !query.next())
-    {
-        QMessageBox::critical(this, "Ошибка", "Клиент не найден");
-        return;
-    }
-
     QSqlQuery updateQuery;
     updateQuery.prepare("UPDATE client SET balance = balance + ? WHERE id = ?");
     updateQuery.addBindValue(amount);
@@ -519,7 +509,6 @@ void MainWindow::on_AddBalance_clicked()
     }
 }
 
-
 void MainWindow::on_MinusBalance_clicked()
 {
     int clientId = ui->ClientBalanceMinus->currentData().toInt();
@@ -529,16 +518,6 @@ void MainWindow::on_MinusBalance_clicked()
     if (amount <= 0)
     {
         QMessageBox::warning(this, "Ошибка", "Введите сумму пополнения");
-        return;
-    }
-
-    QSqlQuery query;
-    query.prepare("SELECT balance FROM client WHERE id = ?");
-    query.addBindValue(clientId);
-
-    if (!query.exec() || !query.next())
-    {
-        QMessageBox::critical(this, "Ошибка", "Клиент не найден");
         return;
     }
 
@@ -604,6 +583,43 @@ void MainWindow::on_AutoCount_clicked()
                                      .arg(cost));
     } else {
         QMessageBox::critical(this, "Ошибка", "Не удалось получить данные о стоимости сеанса.");
+    }
+}
+
+
+void MainWindow::on_BalanceClient_currentIndexChanged(int index)
+{
+    int clientId = ui->BalanceClient->itemData(index).toInt();
+
+    QSqlQuery query("SELECT balance FROM client WHERE id = ?");
+    query.addBindValue(clientId);
+
+    if(query.exec() && query.next())
+    {
+        double clientBalance = query.value(0).toDouble();
+        ui->CurrentBalance->setText(QString::number(clientBalance, 'f', 2));
+    }
+    else
+    {
+        ui->CurrentBalance->setText("Ошибка при отображении текущего баланса клиента");
+    }
+}
+
+void MainWindow::on_ClientBalanceMinus_currentIndexChanged(int index)
+{
+    int clientId = ui->ClientBalanceMinus->itemData(index).toInt();
+
+    QSqlQuery query("SELECT balance FROM client WHERE id = ?");
+    query.addBindValue(clientId);
+
+    if(query.exec() && query.next())
+    {
+        double clientBalance = query.value(0).toDouble();
+        ui->CurrentBalanceMinus->setText(QString::number(clientBalance, 'f', 2));
+    }
+    else
+    {
+        ui->CurrentBalance->setText("Ошибка при отображении текущего баланса клиента");
     }
 }
 

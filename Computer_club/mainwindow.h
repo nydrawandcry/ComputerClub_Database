@@ -56,6 +56,10 @@ private slots:
 
     void on_AutoCount_clicked();
 
+    void on_BalanceClient_currentIndexChanged(int index);
+
+    void on_ClientBalanceMinus_currentIndexChanged(int index);
+
 private:
     Ui::MainWindow *ui;
     QSqlQueryModel *model; //указатель на модель
