@@ -823,31 +823,6 @@
          </layout>
         </item>
         <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_19">
-          <item>
-           <widget class="QLabel" name="label_12">
-            <property name="font">
-             <font>
-              <family>Century Gothic</family>
-             </font>
-            </property>
-            <property name="text">
-             <string>Имя клиента</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QComboBox" name="ClientAuto">
-            <property name="font">
-             <font>
-              <family>Century Gothic</family>
-             </font>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </item>
-        <item>
          <layout class="QHBoxLayout" name="horizontalLayout_13">
           <item>
            <widget class="QLabel" name="label_13">

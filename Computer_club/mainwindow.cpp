@@ -311,39 +311,56 @@ void MainWindow::on_AddSession_clicked()
         QTime sessionEnd = dialog.getSessionEnd();
 
         //сначала проверка, уникально ли игровое место
-        QSqlQuery check("SELECT COUNT(*) FROM client_rents_gaming_place WHERE gaming_place_id = ?");
-        check.addBindValue(placeId);
+        // Проверка на пересекающиеся сессии по времени
+        QSqlQuery check;
+        check.prepare(R"(
+            SELECT COUNT(*)
+            FROM client_rents_gaming_place
+            WHERE gaming_place_id = ?
+              AND NOT (
+                  session_end <= ? OR session_start >= ?
+              )
+        )");
 
-        if(!check.exec())
+        check.addBindValue(placeId);
+        check.addBindValue(sessionStart);  // session_end <= start
+        check.addBindValue(sessionEnd);    // session_start >= end
+
+        if (!check.exec())
         {
-            QMessageBox::warning(this, "Ошибка", "Не удалось проверить доступность игрового места");
+            QMessageBox::warning(this, "Ошибка", "Не удалось проверить занятость игрового места:\n" + check.lastError().text());
             return;
         }
 
         check.next();
+        int conflicts = check.value(0).toInt();
 
-        int count = check.value(0).toInt();
-
-        if(count>0)
+        if (conflicts > 0)
         {
-            QMessageBox::warning(this, "Место занято", "Игровое место уже занято другим пользователем. Пожалуйста, выберите другое.");
+            QMessageBox::warning(this, "Место занято", "Игровое место уже занято в это время.");
             return;
         }
 
-        QSqlQuery insert("INSERT INTO client_rents_gaming_place(client_id, gaming_place_id, session_start, session_end) VALUES (?, ?, ?, ?)");
+        // Вставка новой сессии
+        QSqlQuery insert;
+        insert.prepare(R"(
+            INSERT INTO client_rents_gaming_place (client_id, gaming_place_id, session_start, session_end)
+            VALUES (?, ?, ?, ?)
+        )");
 
         insert.addBindValue(clientId);
         insert.addBindValue(placeId);
         insert.addBindValue(sessionStart);
         insert.addBindValue(sessionEnd);
 
-        if(!insert.exec())
+        if (!insert.exec())
         {
             QMessageBox::critical(this, "Ошибка при добавлении сессии", insert.lastError().text());
+            return;
         }
         else
         {
-            QMessageBox::information(this, "Успех", "Сессия добавлена");
+            QMessageBox::information(this, "Успех", "Сессия успешно добавлена.");
             on_ShowClientsPlaces_clicked();
         }
     }
@@ -476,7 +493,7 @@ void MainWindow::loadClientsBalance()
 
         ui->BalanceClient->addItem(name, id);
         ui->ClientBalanceMinus->addItem(name,id);
-        ui->ClientAuto->addItem(name,id);
+        //ui->ClientAuto->addItem(name,id);
     }
 }
 
@@ -540,7 +557,7 @@ void MainWindow::on_MinusBalance_clicked()
 
 void MainWindow::on_AutoCount_clicked()
 {
-    int clientId = ui->ClientAuto->currentData().toInt();
+    //int clientId = ui->ClientAuto->currentData().toInt();
     QTime startTime = ui->startAuto->time();
     QTime endTime = ui->EndAuto->time();
 
@@ -550,42 +567,14 @@ void MainWindow::on_AutoCount_clicked()
         return;
     }
 
-    //временное добавление в базу для тестирования(думаю убирать или нет)
-    // QSqlQuery insert;
-    // insert.prepare("INSERT INTO client_rents_gaming_place (client_id, gaming_place_id, session_start, session_end) "
-    //                "VALUES (?, ?, ?, ?)");
-    // insert.addBindValue(clientId);
-    // insert.addBindValue(1);
-    // insert.addBindValue(startTime.toString("HH:mm:ss"));
-    // insert.addBindValue(endTime.toString("HH:mm:ss"));
-    // insert.exec(); //
+    int durationMinutes = startTime.secsTo(endTime) / 60;
+    double costPerHour = 100.0; // например, 100 руб/час
+    double cost = (durationMinutes / 60.0) * costPerHour;
 
-    // Запрос аналитики
-    QSqlQuery costQuery;
-    costQuery.prepare(R"(
-        SELECT
-          TIMESTAMPDIFF(MINUTE, session_start, session_end) AS duration_minutes,
-          ROUND(TIMESTAMPDIFF(MINUTE, session_start, session_end) / 60 * 100, 2) AS total_cost
-        FROM client_rents_gaming_place
-        WHERE client_id = ?
-        ORDER BY session_start DESC
-        LIMIT 1
-    )");
-
-    costQuery.addBindValue(clientId);
-
-    if (costQuery.exec() && costQuery.next()) {
-        int duration = costQuery.value(0).toInt();
-        double cost = costQuery.value(1).toDouble();
-
-        ui->Results->setText(QString("Длительность: %1 мин\nСтоимость: %2 руб.")
-                                     .arg(duration)
-                                     .arg(cost));
-    } else {
-        QMessageBox::critical(this, "Ошибка", "Не удалось получить данные о стоимости сеанса.");
-    }
+    ui->Results->setText(QString("Длительность: %1 мин\nСтоимость: %2 руб.")
+                             .arg(durationMinutes)
+                             .arg(QString::number(cost, 'f', 2)));
 }
-
 
 void MainWindow::on_BalanceClient_currentIndexChanged(int index)
 {
@@ -622,4 +611,5 @@ void MainWindow::on_ClientBalanceMinus_currentIndexChanged(int index)
         ui->CurrentBalance->setText("Ошибка при отображении текущего баланса клиента");
     }
 }
+
 
