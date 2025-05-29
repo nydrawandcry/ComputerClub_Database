@@ -30,6 +30,8 @@ private slots:
 
     void on_ShowPlaces_clicked();
 
+    void loadClientsBalance();
+
     void on_addClient_clicked();
 
     void on_EditClient_clicked();
@@ -47,8 +49,6 @@ private slots:
     void on_EditSession_clicked();
 
     void on_DeleteSession_clicked();
-
-    void loadClientsBalance();
 
     void on_AddBalance_clicked();
 

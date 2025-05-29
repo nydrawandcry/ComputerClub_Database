@@ -1,5 +1,6 @@
 #include "editsession.h"
 #include "ui_editsession.h"
+#include <QSqlQuery>
 
 editsession::editsession(QWidget *parent)
     : QDialog(parent)
@@ -15,6 +16,24 @@ editsession::~editsession()
 
 void editsession::setClientPLaceData(int clientId, int placeId, QTime sessionStart, QTime sessionEnd)
 {
+    // клиенты
+    QSqlQuery clientQuery("SELECT id, name FROM client");
+
+    while (clientQuery.next()) {
+        int id = clientQuery.value(0).toInt();
+        QString name = clientQuery.value(1).toString();
+        ui->Client->addItem(name, id);  // именно editsession::ui
+    }
+
+    // игровые места
+    QSqlQuery placeQuery("SELECT id, type FROM gaming_place");
+
+    while (placeQuery.next()) {
+        int id = placeQuery.value(0).toInt();
+        QString type = placeQuery.value(1).toString();
+        ui->Place->addItem(QString("№%1 (%2)").arg(id).arg(type), id); //♥ 💥 id в data!
+    }
+
     int clientIndex = ui->Client->findData(clientId);
     int placeIndex = ui->Place->findData(placeId);
 

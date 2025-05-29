@@ -64,6 +64,21 @@ void MainWindow::on_ShowPlaces_clicked()
     }
 }
 
+void MainWindow::loadClientsBalance()
+{
+    QSqlQuery query("SELECT id, name FROM client");
+
+    while (query.next())
+    {
+        int id = query.value(0).toInt();
+        QString name = query.value(1).toString();
+
+        ui->BalanceClient->addItem(name, id);
+        ui->ClientBalanceMinus->addItem(name,id);
+        //ui->->addItem(name,id);
+    }
+}
+
 void MainWindow::on_addClient_clicked()
 {
     addclient dialog(this);
@@ -398,8 +413,8 @@ void MainWindow::on_EditSession_clicked()
 
         QSqlQuery check;
         check.prepare("SELECT COUNT(*) FROM client_rents_gaming_place WHERE gaming_place_id = ? AND client_id != ?");
-        check.addBindValue(newClient);
         check.addBindValue(newPlace);
+        check.addBindValue(newClient);
 
         if(!check.exec())
         {
@@ -426,8 +441,8 @@ void MainWindow::on_EditSession_clicked()
 
         update.addBindValue(newClient);
         update.addBindValue(newPlace);
-        update.addBindValue(newSessionStart);
-        update.addBindValue(newSessionEnd);
+        update.addBindValue(newSessionStart.toString("hh:mm:ss"));
+        update.addBindValue(newSessionEnd.toString("hh:mm:ss"));
 
         if(!update.exec())
         {
@@ -482,20 +497,7 @@ void MainWindow::on_DeleteSession_clicked()
     }
 }
 
-void MainWindow::loadClientsBalance()
-{
-    QSqlQuery query("SELECT id, name FROM client");
 
-    while (query.next())
-    {
-        int id = query.value(0).toInt();
-        QString name = query.value(1).toString();
-
-        ui->BalanceClient->addItem(name, id);
-        ui->ClientBalanceMinus->addItem(name,id);
-        //ui->ClientAuto->addItem(name,id);
-    }
-}
 
 void MainWindow::on_AddBalance_clicked()
 {
